@@ -1,4 +1,4 @@
-body
+﻿body
 {
   background-color: #f8f8ff;
   margin: 0;
@@ -57,9 +57,74 @@ td
   position: absolute;
   top: 26px;
   left: 15px;
+  display: inline-flex;
+  align-items: center;
+  z-index: 2;
 }
 .siteheader a.logo:hover {
   text-decoration: none;
+}
+
+.siteheader a.logo > div {
+  display: block;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: stretch;
+  padding: 10px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #d8d8e8;
+}
+
+.site-nav a,
+.site-nav a:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #303060;
+  font-weight: 600;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+
+.site-nav a.is-active,
+.site-nav a:hover {
+  text-decoration: none;
+  background: #eef0ff;
+}
+
+.page-section {
+  display: none;
+}
+
+.page-section.is-active {
+  display: block;
+}
+
+.page-content,
+.content {
+  margin: 50px;
+  margin-top: 20px;
+}
+
+.project-summary {
+  position: relative;
+  min-height: 84px;
+  margin-bottom: 18px;
+  padding-left: 88px;
+}
+
+.project-logo {
+  max-width: 64px;
+  position: absolute;
+  left: 0;
+  top: 0;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -119,18 +184,6 @@ td
 /* ----------------------------- */
 /* ----------------------------- */
 /* ----------------------------- */
-
-div.content {
-
-  margin: 50px;
-  margin-top: 20;
-}
-
-img.project-logo {
-	max-width: 64px;
-	position: absolute;
-	left: 425px;
-}
 
 /* ----------------------------- */
 /* ----------------------------- */
@@ -2809,6 +2862,45 @@ img.right-margin-image
     display: none;
   }
 
+  .siteheader {
+    height: auto;
+    min-height: 80px;
+  }
+
+  .siteheader a.logo {
+    position: relative;
+    display: inline-flex;
+    top: 0;
+    left: 0;
+    font-size: 34pt;
+    padding: 16px 12px;
+  }
+
+  .siteheader a.logo > div {
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .site-nav {
+    gap: 8px;
+    padding: 10px 12px;
+    align-items: stretch;
+  }
+
+  .site-nav a,
+  .site-nav a:visited {
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+
+  .page-content,
+  .content {
+    margin: 20px;
+  }
+
+  .project-summary {
+    padding-left: 78px;
+  }
 }
 
 @media only screen and (min-width: 601px) {

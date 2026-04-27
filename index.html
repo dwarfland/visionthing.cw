@@ -1,111 +1,324 @@
+﻿<!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<meta name="keywords" content="developer tools,cross-platform,.NET,Delphi,Java,Cocoa,Swift,Oxygene,Pascal,Object Pascal,Multi-Tier,Database Access,  Remoting"/>
-		<meta name="description" content="Vision Thing Curaçao creates sophisticated software solutions for the island of Curaçao and whole world."/>
-		<meta property="og:image" content="https://www.visionthing.co/cube1024.png"/>
+		<meta name="keywords" content="developer tools,cross-platform,.NET,Delphi,Java,Cocoa,Swift,Oxygene,Pascal,Object Pascal,Multi-Tier,Database Access,Remoting"/>
+		<meta name="description" content="Vision Thing Curaçao creates sophisticated software solutions for the island of Curaçao and the whole world."/>
+		<meta property="og:image" content="https://www.visionthing.cw/cube1024.png"/>
 		<meta property="og:title" content="Vision Thing Curaçao"/>
-		<meta property="og:description" content="Vision Thing Curaçao creates sophisticated software solutions for the island of Curaçao and whole world."/>
-		<meta property="og:type" content=""/>
-		<meta property="og:sitename" content="Vision Thing Curaçao"/>
+		<meta property="og:description" content="Vision Thing Curaçao creates sophisticated software solutions for the island of Curaçao and the whole world."/>
+		<meta property="og:type" content="website"/>
+		<meta property="og:site_name" content="Vision Thing Curaçao"/>
 		<meta property="og:url" content="https://www.visionthing.cw/"/>
 
 		<meta name="twitter:card" content="summary_large_image"/>
 		<meta name="twitter:site" content="@VisionThingBV"/>
 		<meta name="twitter:image" content="https://www.visionthing.cw/cube1024.png"/>
 		<meta name="twitter:title" content="Vision Thing Curaçao"/>
-		<meta name="twitter:description" content="Vision Thing Curaçao creates sophisticated software solutions for the island of Curaçao and whole world."/>
+		<meta name="twitter:description" content="Vision Thing Curaçao creates sophisticated software solutions for the island of Curaçao and the whole world."/>
+
+		<title>Vision Thing Curaçao</title>
 
 		<link rel="stylesheet" type="text/css" href="./styles.css" />
 		<link rel="stylesheet" href="https://use.typekit.net/nbz6fkz.css">
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-556665-29"></script>
 		<script>
+			const SITE_PAGES = {
+				home: {
+					path: '',
+					title: 'Vision Thing Curaçao',
+					description: 'Vision Thing Curaçao creates sophisticated software solutions for the island of Curaçao and the whole world.'
+				},
+				verbs: {
+					path: 'verbs',
+					title: 'Spanish Verbs for Mac – Learn Spanish Conjugations Easily',
+					description: 'Learn Spanish verbs quickly with Spanish Verbs for Mac. Track, conjugate, and study verbs with ease. Available now on the App Store.'
+				},
+				weather: {
+					path: 'weather',
+					title: 'Curaçao Weather & Beaches – The official app for Curaçao',
+					description: 'Live Curaçao weather, beach conditions, wind & waves, UV index, and rain radar—right on your iPhone. The official Curaçao Weather & Beaches app.'
+				},
+				trails: {
+					path: 'trails',
+					title: 'Trails for iPhone – Record and Revisit the Trails you Walk, Hike, Run or Cycle',
+					description: 'Record your hikes, walks, runs, and rides with Trails for iPhone. Beautiful maps, accurate GPS tracking, and an elegant interface. Available now on the App Store.'
+				},
+				privacy: {
+					path: 'privacy',
+					title: 'Privacy Policy – Vision Thing Curaçao',
+					description: 'Privacy information for Vision Thing Curaçao apps, including Spanish Verbs, Curaçao Weather, and Trails.'
+				},
+				about: {
+					path: 'about',
+					title: 'About – Vision Thing Curaçao',
+					description: 'About Vision Thing Curaçao.'
+				}
+			};
+
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag('js', new Date());
 			gtag('config', 'UA-556665-29', { 'anonymize_ip': true });
+
+			function normalizePageKey(value) {
+				if (!value) return 'home';
+				let key = value.toLowerCase().trim();
+				key = key.replace(/^https?:\/\/[^/]+/i, '');
+				key = key.replace(/^#/, '').replace(/^\//, '').replace(/\.html$/, '').replace(/\/$/, '');
+				if (key === '' || key === 'index') return 'home';
+				return SITE_PAGES[key] ? key : 'home';
+			}
+
+			function pageKeyFromLocation() {
+				const hash = window.location.hash || '';
+				if (hash && hash !== '#') {
+					return normalizePageKey(hash);
+				}
+
+				return normalizePageKey(window.location.pathname || '/');
+			}
+
+			function pageUrl(pageKey) {
+				const page = SITE_PAGES[pageKey] || SITE_PAGES.home;
+				return page.path ? '/' + page.path : '/';
+			}
+
+			function pageHref(pageKey) {
+				if (window.location.protocol === 'file:') {
+					return pageKey === 'home' ? '#' : '#' + pageKey;
+				}
+				return pageUrl(pageKey);
+			}
+
+			function updateMeta(pageKey) {
+				const page = SITE_PAGES[pageKey] || SITE_PAGES.home;
+				document.title = page.title;
+				const description = document.querySelector('meta[name="description"]');
+				if (description) description.setAttribute('content', page.description);
+				const ogTitle = document.querySelector('meta[property="og:title"]');
+				if (ogTitle) ogTitle.setAttribute('content', page.title);
+				const ogDescription = document.querySelector('meta[property="og:description"]');
+				if (ogDescription) ogDescription.setAttribute('content', page.description);
+				const ogUrl = document.querySelector('meta[property="og:url"]');
+				if (ogUrl) ogUrl.setAttribute('content', 'https://www.visionthing.cw' + pageUrl(pageKey));
+				const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+				if (twitterTitle) twitterTitle.setAttribute('content', page.title);
+				const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+				if (twitterDescription) twitterDescription.setAttribute('content', page.description);
+			}
+
+			function syncPageLinks() {
+				document.querySelectorAll('[data-nav-page]').forEach((link) => {
+					link.setAttribute('href', pageHref(link.dataset.navPage));
+				});
+			}
+
+			function setActivePage(pageKey, options = {}) {
+				const normalizedPageKey = SITE_PAGES[pageKey] ? pageKey : 'home';
+				document.querySelectorAll('[data-page]').forEach((section) => {
+					section.classList.toggle('is-active', section.dataset.page === normalizedPageKey);
+				});
+				document.querySelectorAll('[data-nav-page]').forEach((link) => {
+					link.classList.toggle('is-active', link.dataset.navPage === normalizedPageKey);
+				});
+				updateMeta(normalizedPageKey);
+
+				if (!options.skipHistory) {
+					const nextUrl = pageHref(normalizedPageKey);
+					window.history.pushState({ page: normalizedPageKey }, '', nextUrl);
+				}
+			}
+
+			window.addEventListener('DOMContentLoaded', () => {
+				syncPageLinks();
+				setActivePage(pageKeyFromLocation(), { skipHistory: true });
+
+				document.querySelectorAll('[data-nav-page]').forEach((link) => {
+					link.addEventListener('click', (event) => {
+						event.preventDefault();
+						setActivePage(link.dataset.navPage);
+					});
+				});
+			});
+
+			window.addEventListener('popstate', () => {
+				setActivePage(pageKeyFromLocation(), { skipHistory: true });
+			});
+
+			window.addEventListener('hashchange', () => {
+				if (window.location.protocol === 'file:') {
+					setActivePage(pageKeyFromLocation(), { skipHistory: true });
+				}
+			});
 		</script>
-		
-		
 	</head>
-  	<body style="margin: 0; padding: 0;">
+	<body style="margin: 0; padding: 0;">
 		<div class="siteheader">
-			<a href="/" class="logo">
+			<a href="/" class="logo" data-nav-page="home">
 				<div style="height: 80px; width: 400px;">
 					<nobr>Vision Thing<span class="hide-on-mobile" style="font-size:0.4em;">&nbsp;Curaçao</span></nobr>
 				</div>
 			</a>
 		</div>
 
-		<div class="content">
-			<div class="logo">
-				<img src="cube6.png" width="200px" style="position: relative; left: -50px"/>
-			</div>
-			<div class="body">
-				<h1>Vision Thing</h1>
-				Creating sophisticated software solutions,<br /> for the island and the whole world.
+		<nav class="site-nav">
+			<a href="/" data-nav-page="home">Home</a>
+			<a href="/verbs" data-nav-page="verbs">Verbs</a>
+			<a href="/trails" data-nav-page="trails">Trails</a>
+			<a href="/weather" data-nav-page="weather">Weather</a>
+			<a href="/privacy" data-nav-page="privacy">Privacy</a>
+			<a href="/about" data-nav-page="about">About</a>
+		</nav>
 
-				<h2>Current Projects</h2>
+		<main>
+			<section class="page-section" data-page="home">
+				<div class="content">
+					<div class="logo">
+						<img src="cube6.png" width="200" style="position: relative; left: -50px" alt="Vision Thing logo"/>
+					</div>
+					<div class="body">
+						<h1>Vision Thing</h1>
+						<p class="intro">Creating sophisticated software solutions,<br /> for the island and the whole world.</p>
 
-				<a href="verbs.html"><img src="Verbs-512.png" class="project-logo" ></a>
-				<b>Spanish Verbs</b> <span style="color: #808080">for Mac</span></h1>
-				<p>
-					Help learn and conjugate verbs.
-					<br />
-					<a href="verbs.html">Read more</a> <span style="color: #808080;">& download</span>.
-					<br class="show-on-mobile"/>
-				</p>
+						<h2>Current Projects</h2>
 
-				<a href="trails.html"><img src="Trails-1024.png" class="project-logo" ></a>
-				<b>Trails</b> <span style="color: #808080">for iPhone</span></h1>
-				<p>
-					Record the trails you walk, hike, run or cycle.
-					<br />
-					<a href="trails.html">Read more</a> <span style="color: #808080;">& download</span>.
-					<br class="show-on-mobile"/>
-				</p>
+						<div class="project-summary">
+							<a href="/verbs" data-nav-page="verbs"><img src="Verbs-512.png" class="project-logo" alt="Spanish Verbs icon"></a>
+							<div>
+								<b>Spanish Verbs</b> <span class="gray">for Mac</span>
+								<p>
+									Help learn and conjugate verbs.<br />
+									<a href="/verbs" data-nav-page="verbs">Read more</a> <span class="gray">&amp; download</span>.
+								</p>
+							</div>
+						</div>
 
-				<a href="weather.html"><img src="Weather-1024.png" class="project-logo" ></a>
-				<b>Curaçao Weather</b> <span style="color: #808080">for iOS</span></h1>
-				<p>
-					Developed in cooperation with <a target="_blank" href="http://www.meteo.cw">Meteo</a>.
-					<br />
-					<a href="weather.html">Read more</a> <span style="color: #808080;">& download</span>. <a href="https://www.curacaoweatherapp.com" target="_blank">Official website</a>.
-				</p>
+						<div class="project-summary">
+							<a href="/trails" data-nav-page="trails"><img src="Trails-1024.png" class="project-logo" alt="Trails icon"></a>
+							<div>
+								<b>Trails</b> <span class="gray">for iPhone</span>
+								<p>
+									Record the trails you walk, hike, run or cycle.<br />
+									<a href="/trails" data-nav-page="trails">Read more</a> <span class="gray">&amp; download</span>.
+								</p>
+							</div>
+						</div>
 
-				<b>Alf</b>, Technical Consulting 
-				<p style="position: relative;">
-					A web platform for automated Legal workflows.
-				</p>
+						<div class="project-summary">
+							<a href="/weather" data-nav-page="weather"><img src="Weather-1024.png" class="project-logo" alt="Curaçao Weather icon"></a>
+							<div>
+								<b>Curaçao Weather</b> <span class="gray">for iOS</span>
+								<p>
+									Developed in cooperation with <a target="_blank" rel="noopener" href="http://www.meteo.cw">Meteo</a>.<br />
+									<a href="/weather" data-nav-page="weather">Read more</a> <span class="gray">&amp; download</span>. <a href="https://www.curacaoweatherapp.com" target="_blank" rel="noopener">Official website</a>.
+								</p>
+							</div>
+						</div>
 
-				<h2>Past Projects</h2>
+						<b>Alf</b>, Technical Consulting
+						<p>A web platform for automated legal workflows.</p>
 
+						<h2>Past Projects</h2>
+						<b>WUnite</b>
+						<p>A private social network app for iOS.</p>
 
-				<b>WUnite</b>
-				<p style="position: relative;">
-					A private social network app for iOS.
-				</p>
-				<!--
-				<br />
-				<span style="color: #C00000;">DISCONTINUED</span>
-				-->
+						<h2>Contact</h2>
+						<p>Email <a href="mailto:contact@visionthing.cw">contact@visionthing.cw</a>.</p>
 
-				<h2>Contact</h2>
-				<p>
-					Email <a href="mailto:contact@visionthing.cw">contact@visionthing.cw</a>.
-				</p>
+						<h2>Social Media</h2>
+						<p>
+							<nobr><a href="https://twitter.com/VisionThingBV" target="_blank" rel="noopener"><img src="1282-twitter-toolbar@2x.svg" height="32" style="position:relative; top: 8px; margin-right:5px;" alt="Twitter"/>Twitter</a></nobr>
+							<nobr><a href="https://www.facebook.com/VisionThingCuracao" target="_blank" rel="noopener"><img src="1260-facebook-toolbar@2x.svg" height="32" style="position:relative; top: 8px; margin-right:5px;" alt="Facebook"/>Facebook</a></nobr>
+							<nobr><a href="https://www.instagram.com/VisionThingCuracao" target="_blank" rel="noopener"><img src="1268-instagram-toolbar@2x.svg" height="32" style="position:relative; top: 8px; margin-right:5px;" alt="Instagram"/>Instagram</a></nobr>
+							<nobr><a href="https://www.linkedin.com/company/82672002/" target="_blank" rel="noopener"><img src="1270-linkedin-toolbar@2x.svg" height="32" style="position:relative; top: 8px; margin-right:5px;" alt="LinkedIn"/>LinkedIn</a></nobr>
+						</p>
+					</div>
+				</div>
+			</section>
 
-				<h2>Social Media</h2>
-				<p>
-					<nobr><a href="https://twitter.com/VisionThingBV" target="_blank"><img src="1282-twitter-toolbar@2x.svg" height="32" style="position:relative; top: 8px; margin-right:5px;"/>Twitter</a></nobr>
-					<nobr><a href="https://www.facebook.com/VisionThingCuracao" target="_blank"><img src="1260-facebook-toolbar@2x.svg" height="32" style="position:relative; top: 8px; margin-right:5px;"/>Facebook</a></nobr>
-					<nobr><a href="https://www.instagram.com/VisionThingCuracao" target="_blank"><img src="1268-instagram-toolbar@2x.svg" height="32" style="position:relative; top: 8px; margin-right:5px;"/>Instagram</a></nobr>
-					<nobr><a href="https://www.linkedin.com/company/82672002/" target="_blank"><img src="1270-linkedin-toolbar@2x.svg" height="32" style="position:relative; top: 8px; margin-right:5px;"/>LinkedIn</a></nobr>
-				</p>			
-			</div>
-		</div>
+			<section class="page-section" data-page="verbs">
+				<div class="content page-content">
+					<div class="logo">
+						<img src="cube6.png" alt="Vision Thing Logo" width="200" style="position: relative; left: -50px"/>
+					</div>
+					<div class="page-body">
+						<h1>Spanish Verbs <span class="gray">for Mac</span></h1>
+						<p>Learning Spanish does not have to be harder than it needs to be. Verbs lets you keep track of the verbs as you learn them and browse the different conjugations.</p>
+						<p>Add more verbs as you go along, and have Verbs conjugate regular verbs for you automatically. Manually adjust for irregularities. Show and hide the conjugations you need at the time. Export your verbs to .html.</p>
+						<p>Get it on the <a href="https://apps.apple.com/us/app/spanish-verbs-conjugations/id1661999612" target="_blank" rel="noopener">App Store</a>.</p>
+						<p><a href="https://apps.apple.com/us/app/spanish-verbs-conjugations/id1661999612" target="_blank" rel="noopener"><img src="./apple-app-store-badge-us.png" alt="Download on the App Store" height="50" style="margin-top:10px; margin-bottom: 10px;"/></a></p>
+						<p><img src="Verbs-512.png" alt="Spanish Verbs for Mac" width="256" style="position: relative; left: -10px;"/></p>
+					</div>
+				</div>
+			</section>
 
+			<section class="page-section" data-page="trails">
+				<div class="content page-content">
+					<div class="logo">
+						<img src="cube6.png" alt="Vision Thing Logo" width="200" style="position: relative; left: -50px" />
+					</div>
+					<div class="page-body">
+						<h1>Trails <span class="gray">for iPhone</span></h1>
+						<p>Record and revisit the trails you walk, hike, run or cycle.</p>
+						<p>Trails is a simple and easy-to-use app that lets you record trails as you explore them. Share your trails with others, or revisit your favorites in the future. Learn how far you walked, how high you climbed, and more.</p>
+						<p>Get it on the <a href="https://apps.apple.com/us/app/trails/id6753320651" target="_blank" rel="noopener">App Store</a>.</p>
+						<p><a href="https://apps.apple.com/us/app/trails/id6753320651" target="_blank" rel="noopener"><img src="./apple-app-store-badge-us.png" alt="Download on the App Store" height="50" style="margin-top:10px; margin-bottom: 10px;"/></a></p>
+						<p><img src="Trails-1024.png" alt="Trails for iPhone" width="256" style="position: relative; left: -15px;"/></p>
+					</div>
+				</div>
+			</section>
+
+			<section class="page-section" data-page="weather">
+				<div class="content page-content">
+					<div class="logo">
+						<img src="cube6.png" alt="Vision Thing Logo" width="200" style="position: relative; left: -50px" />
+					</div>
+					<div class="page-body">
+						<h1>Curaçao Weather <span class="gray">for iOS</span></h1>
+						<p>The official Weather App for the island and its surroundings.</p>
+						<p>Curaçao Weather provides you with up-to-date weather information and forecast, a map view with rain and cloud overlay, as well as general information about the island and its beautiful 80+ beaches and snorkel/dive sites.</p>
+						<p>Read more on <a href="https://www.curacaoweatherapp.com" target="_blank" rel="noopener">curaçaoweatherapp.com</a>.</p>
+						<p>Get it on the <a href="https://apps.apple.com/app/id1080794734" target="_blank" rel="noopener">App Store</a>, 100% free.</p>
+						<p><a href="https://apps.apple.com/us/app/curaçao-weather/id1080794734" target="_blank" rel="noopener"><img src="./apple-app-store-badge-us.png" alt="Download on the App Store" height="50" style="margin-top:10px; margin-bottom: 10px;" /></a></p>
+						<p><img src="./Weather-1024.png" alt="Curaçao Weather & Beaches app icon" width="256" style="position: relative; left: -15px;" /></p>
+						<p>Read the <a href="http://www.elementscompiler.com/elements/casestudies/curacaoweather" target="_blank" rel="noopener">Case Study</a> on how Curaçao Weather was developed, using the Elements and Oxygene programming language from <a href="http://www.remobjects.com" target="_blank" rel="noopener">RemObjects Software</a>.</p>
+					</div>
+				</div>
+			</section>
+
+			<section class="page-section" data-page="privacy">
+				<div class="content page-content">
+					<div class="logo">
+						<img src="cube6.png" width="200" style="position: relative; left: -50px" alt="Vision Thing logo"/>
+					</div>
+					<div class="page-body">
+						<h1>Privacy Policy</h1>
+						<p>Our apps are committed to preserving your privacy.</p>
+						<h2>Spanish Verbs for Mac</h2>
+						<p>The app does not collect any data without your permission and never communicates with our servers or third parties across the network.</p>
+						<h2>Curaçao Weather App</h2>
+						<p>The app does not collect any data without your permission and, in normal operation, does not transmit any data about you to our servers.</p>
+						<p>If and only if you choose to submit impacts via the dedicated “Report an Impact” feature, the data you explicitly provide for the report will be transmitted to our servers for further processing by the app and/or the Meteorological Department. Data collected as part of a report includes the optional photo and description or comment you provide, and may also include your current GPS location, if you choose to enable that option.</p>
+						<p>The app uses Sign in with Apple and Google Sign-in for submitting reports, to avoid spam and abuse. The reports you submit will be internally linked to your account in case the Weather Department needs to follow up with you, but no information about your account will be made available to anybody. Only the type of impact and the rough location will become visible to other users of the app.</p>
+					</div>
+				</div>
+			</section>
+
+			<section class="page-section" data-page="about">
+				<div class="content page-content">
+					<div class="logo">
+						<img src="cube6.png" width="200" style="position: relative; left: -50px" alt="Vision Thing logo"/>
+					</div>
+					<div class="page-body">
+						<h1>About</h1>
+						<p>Vision Thing Curaçao creates sophisticated software solutions for the island of Curaçao and the whole world.</p>
+						<p>Email <a href="mailto:contact@visionthing.cw">contact@visionthing.cw</a>.</p>
+					</div>
+				</div>
+			</section>
+		</main>
 	</body>
 </html>
